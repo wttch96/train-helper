@@ -1,7 +1,10 @@
 from setuptools import setup
 
-setup(name="train_helper-train-helper", version="1.0", description="Wttch's Train Helper",
+setup(name="wttch-train-helper", version="1.0", description="Wttch's Train Helper",
       author="train_helper", py_modules=[
             'train_helper.senders',
+            'train_helper.senders.DingtalkMessageSender',
+            'train_helper.senders.WechatMessageSender',
+            'train_helper.senders.TrainMessageSender',
             "train_helper.env"
       ])
