@@ -1,7 +1,0 @@
-from .DingtalkMessageSender import DingtalkMessageSender
-from .WechatMessageSender import WechatMessageSender
-from .TrainMessageSender import TrainMessageSender
-
-DingtalkMessageSender = DingtalkMessageSender
-WechatMessageSender = WechatMessageSender
-TrainMessageSender = TrainMessageSender

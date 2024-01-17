@@ -4,10 +4,11 @@ import hmac
 import json
 import time
 
+from .base import BaseNotification
 import requests
 
 
-class DingtalkMessageSender:
+class DingtalkNotification(BaseNotification):
     """
     钉钉 Webhook 机器人。
     文档地址: https://open.dingtalk.com/document/orgapp/robot-message-types-and-data-format#title-z74-8to-i7e
@@ -62,16 +63,15 @@ class DingtalkMessageSender:
             "msgtype": "text"
         })
 
-    def send_markdown(self, title: str, markdown: str):
+    def send_markdown(self, markdown: str):
         """
         发送 markdown 类型的消息
-        :param title: 标题
         :param markdown: markdown 格式的数据内容
         """
         self._send({
             "msgtype": "markdown",
             "markdown": {
-                "title": title,
+                "title": "title",  # 似乎这个参数没什么用
                 "text": markdown
             },
         })

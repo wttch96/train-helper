@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name="wttch-train-helper", version="1.0", description="Wttch's Train Helper",
-      author="train_helper", py_modules=[
+      author="wttch", py_modules=[
             'train_helper.senders',
             'train_helper.senders.DingtalkMessageSender',
             'train_helper.senders.WechatMessageSender',

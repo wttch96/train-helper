@@ -2,8 +2,10 @@ import json
 
 import requests
 
+from .base import BaseNotification
 
-class WechatMessageSender:
+
+class WechatNotification(BaseNotification):
     """
     企业微信 webhook 消息发送器.
     API 地址: https://developer.work.weixin.qq.com/document/path/91770
