@@ -1,14 +1,18 @@
-from setuptools import setup
+from distutils.core import setup
 
-setup(name="wttch-train-helper", version="1.0", description="Wttch's Train Helper",
-      author="wttch", py_modules=[
-            'wttch.train.notification',
-            'wttch.train.notification.base',
-            'wttch.train.notification.dingtalk',
-            'wttch.train.notification.wechat',
-            'wttch.train.torch',
-            'wttch.train.torch.utils',
-            'wttch.train.utils',
-            'wttch.train.utils.cache_wrapper',
-            'wttch.train.utils.stopwatch',
-      ])
+setup(
+    name='wttch-train-helper',
+    version='0.0.2',
+    description="Wttch's Train Helper",
+    author="wttch",
+    packages=[
+        'wttch',
+        'wttch.train',
+        'wttch.train.notification',
+        'wttch.train.torch',
+        'wttch.train.utils',
+    ],
+    package_dir={
+        '': 'src/wttch-train-helper'
+    }
+)
