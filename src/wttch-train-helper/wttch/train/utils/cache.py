@@ -41,7 +41,7 @@ def cache_wrapper(prefix, save_path=None, force_write=False, use: CacheType = Ca
             if force_write or not os.path.exists(real_filename):
                 # 强制写入或者没有缓存
                 # 执行并保存
-                model = train_func(args, kwargs)
+                model = train_func(*args, **kwargs)
                 if use == CacheType.JOBLIB:
                     import joblib
                     joblib.dump(model, real_filename)
