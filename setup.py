@@ -14,5 +14,6 @@ setup(
     ],
     package_dir={
         '': 'src/wttch-train-helper'
-    }
+    },
+    requires=['torch', 'numpy', 'prettytable']
 )
