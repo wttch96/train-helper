@@ -1,30 +1,38 @@
 import time
 
+from prettytable import PrettyTable
+
 
 class StopWatch:
     def __init__(self):
-        self.times = []
-        self.job_names = []
-        self.start_time = None
-        self.job_name = None
+        self._times = []
+        self._job_names = []
+        self._start_time = None
+        self._cur_job_name = None
+        self._pt = PrettyTable(["Job", "Time", "Percent"])
+        # self.pt.set_style(FRAME)
 
     def start(self, name=''):
-        self.start_time = time.time()
-        self.job_name = name
+        self._start_time = time.time()
+        self._cur_job_name = name
 
     def stop(self):
-        self.times.append(time.time() - self.start_time)
-        self.job_names.append(self.job_name)
-        return self.times[-1]
+        if self._cur_job_name is None:
+            raise Exception("Job name is required")
+        self._times.append(time.time() - self._start_time)
+        self._job_names.append(self._cur_job_name)
+        self._cur_job_name = None
+        return self._times[-1]
 
     def avg(self):
-        return self.sum() / len(self.times)
+        return self.sum() / len(self._times)
 
     def sum(self):
-        return sum(self.times)
+        return sum(self._times)
 
     def display(self):
-        print(f'{"job_name":<20} {"time(s)":>10}')
-        print('-' * 40)
-        for i in range(0, len(self.times)):
-            print(f'{self.job_names[i]:<20} {self.times[i]:>10.2f}')
+        total = self.sum()
+        for i in range(0, len(self._times)):
+            self._pt.add_row([self._job_names[i], f'{self._times[i]:.3f}', f'{self._times[i] / total * 100:.2f}%'])
+        self._pt.title = f"Sum: {total:.3f}, Avg: {self.avg():.3f}"
+        print(self._pt)
