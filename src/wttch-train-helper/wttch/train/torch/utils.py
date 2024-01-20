@@ -17,7 +17,7 @@ def try_gpu(device_no: Optional[int] = None) -> torch.device:
     if torch.cuda.is_available():
         if device_no is not None and device_no < torch.cuda.device_count():
             #
-            return torch.cuda.device(device_no)
+            return torch.device(f'cuda:{device_no}')
 
         return torch.device('cuda')
     return torch.device('mps' if torch.mps else 'cpu')
