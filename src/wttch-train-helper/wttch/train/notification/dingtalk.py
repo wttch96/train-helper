@@ -63,15 +63,16 @@ class DingtalkNotification(BaseNotification):
             "msgtype": "text"
         })
 
-    def send_markdown(self, markdown: str):
+    def send_markdown(self, markdown: str, title: str):
         """
         发送 markdown 类型的消息
+        :param title: 消息标题：消息列表看到的新消息暂时的内容
         :param markdown: markdown 格式的数据内容
         """
         self._send({
             "msgtype": "markdown",
             "markdown": {
-                "title": "title",  # 似乎这个参数没什么用
+                "title": title,
                 "text": markdown
             },
         })

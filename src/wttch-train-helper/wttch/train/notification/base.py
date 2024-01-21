@@ -8,5 +8,5 @@ class BaseNotification(ABC):
         pass
 
     @abstractmethod
-    def send_markdown(self, markdown: str):
+    def send_markdown(self, *args, **kwargs):
         pass
