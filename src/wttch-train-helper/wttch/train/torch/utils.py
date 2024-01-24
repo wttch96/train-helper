@@ -42,3 +42,23 @@ def get_device_local() -> torch.device:
         device = try_gpu()
         set_device_local(device)
     return device
+
+
+def set_dtype_local(dtype: torch.dtype):
+    """
+    设置线程变量：训练数据类型
+    Args:
+        dtype: 训练用数据类型
+    """
+    _device_local.dtype = dtype
+
+    print(f'设置线程变量 dtype = {dtype} [{threading.currentThread().name}]')
+
+
+def get_dtype_local():
+    dtype = getattr(_device_local, 'dtype', None)
+    if dtype is None:
+        dtype = torch.float
+        set_dtype_local(dtype)
+        print(f'线程变量 dtype 为空，已设置为 {dtype}.')
+    return dtype
