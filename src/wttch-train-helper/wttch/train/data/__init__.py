@@ -1,3 +1,3 @@
-from .seq_data_loader import SeqDataLoader
+from .seq_data_helper import SeqDataLoader
 
 SeqDataLoader = SeqDataLoader
