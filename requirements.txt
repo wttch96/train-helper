@@ -3,3 +3,4 @@ setuptools~=68.2.0
 torch~=2.1.2
 prettytable~=3.9.0
 numpy~=1.26.3
+tqdm~=4.66.1

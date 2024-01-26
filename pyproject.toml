@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wttch-train-helper"
-version = "0.0.12"
+version = "0.0.14"
 authors = [
-  { name="Wttch", email="wttch@wttch.com" },
+    { name = "Wttch", email = "wttch@wttch.com" },
 ]
 description = "Wttch's train helper"
 readme = "README.md"
