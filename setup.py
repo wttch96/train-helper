@@ -2,12 +2,13 @@ from distutils.core import setup
 
 setup(
     name='wttch-train-helper',
-    version='0.0.7',
+    version='0.0.14',
     description="Wttch's Train Helper",
     author="wttch",
     packages=[
         'wttch',
         'wttch.train',
+        'wttch.train.data',
         'wttch.train.notification',
         'wttch.train.torch',
         'wttch.train.utils',

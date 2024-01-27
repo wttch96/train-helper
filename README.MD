@@ -82,6 +82,20 @@ stopwatch.stop()
 stopwatch.display()
 ```
 
+## 2.3 进度条
+> 简单包装了 `tqdm` 工具。
+
+```python
+from wttch.train.utils.progress import Progress
+
+with Progress(total=1000) as progress:
+    for i in range(1000):
+        # 在这里训练
+
+        # 进度条末尾显示训练结果
+        progress.train_result(loss=0.01, acc=0.02)
+```
+
 ## 三、torch 工具包
 
 ### 3.1 方便设备获取
