@@ -177,10 +177,26 @@ batch_size = args.batch_size
 # 保存模型
 args.save_module(nn.Linear(100, 10))
 ```
+具体使用方式：
 ```shell
 # --cuda:       使用 cuda 0 训练
 # --batch-size: 批处理 64
 # -m:           模型名称为 module1 可以调用
 # 更多 -h: 查看帮助
 python **.py --cuda 0 --batch-size 64 -m module1
+
+# usage: 设置训练参数 [-h] [-e EPOCHS] [-b BATCH_SIZE] [-d CUDA_NO] [-t {32,64}] [-m MODULE_NAME]
+# 
+# options:
+#   -h, --help            show this help message and exit
+#   -e EPOCHS, --epochs EPOCHS
+#                         训练轮次
+#   -b BATCH_SIZE, --batch-size BATCH_SIZE
+#                         批处理大小
+#   -d CUDA_NO, --cuda-no CUDA_NO
+#                         使用的 cuda 设备序号
+#   -t {32,64}, --dtype {32,64}
+#                         dtype 使用 float32 还是 float64
+#   -m MODULE_NAME, --module-name MODULE_NAME
+#                         模型保存名称
 ```
