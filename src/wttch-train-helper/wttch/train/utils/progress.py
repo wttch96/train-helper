@@ -33,7 +33,7 @@ class Progress(tqdm):
         if loss is not None:
             desc_str += f" - Loss: {loss:.6f}"
         if acc is not None:
-            desc_str += f" - Acc: {acc * 100:.2f}%"
+            desc_str += f" - Acc: {acc * 100:5.2f}%"
         self.set_description_str(desc_str)
         if self.iterable is None:
             # 如果不是自动迭代，推进1

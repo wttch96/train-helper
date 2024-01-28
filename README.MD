@@ -83,7 +83,12 @@ stopwatch.display()
 ```
 
 ## 2.3 进度条
-> 简单包装了 `tqdm` 工具。
+
+简单包装了 `tqdm` 工具。
+
+固定一种还不错的进度条格式。
+
+### 2.3.1 循环模式
 
 ```python
 from wttch.train.utils.progress import Progress
@@ -96,13 +101,42 @@ with Progress(total=1000) as progress:
         progress.train_result(loss=0.01, acc=0.02)
 ```
 
+### 2.3.2 迭代器模式
+
+```python
+from wttch.train.utils.progress import Progress
+
+dataset = [1, 2, 3]
+
+progress = Progress(dataset)
+
+for data in progress:
+    # 使用 data 进行训练
+
+    # 进度条末尾显示训练结果
+    progress.train_result(loss=0.01, acc=0.02)
+```
+
 ## 三、torch 工具包
 
-### 3.1 方便设备获取
+### 3.1 训练设备获取
 
-> (1). 将使用的设备写入 thread local;
-> (2). 从 thread local 中获取设备数据;
-> (3). 训练。
+#### 3.1.1 获取设备
+
+先尝试获取 cuda, 如果不支持获取 mps(macOS), 还不支持就 cpu。
+
+可以添加 `device_no` 参数，但是只对 cuda 有效，表示 cuda 的序号。
+
+```python
+from wttch.train.torch.utils import try_gpu
+
+try_gpu(device_no=2)
+```
+
+#### 3.1.2 ThreadLocal 的设备变量的设置、获取
+
+1. 将使用的设备写入 thread local;
+2. 需要训练设备的地方, 从 thread local 中获取设备数据;
 
 ```python
 from wttch.train.torch.utils import try_gpu, get_device_local, set_device_local
@@ -113,4 +147,40 @@ set_device_local(try_gpu(device_no=0))
 # 从 thread local 读取设备
 device = get_device_local()
 
+```
+
+### 3.2 ThreadLocal 的训练类型 dtype 的设置、获取
+
+1. 将使用的 dtype 写入 thread local;
+2. 需要训练类型的地方, 从 thread local 中获取设备数据;
+
+```python
+import torch
+from wttch.train.torch.utils import get_dtype_local, set_dtype_local
+
+# 将训练的 dtype 数据类型写入 thread local
+set_dtype_local(torch.float32)
+
+# 从 thread local 读取数据类型
+dtype = get_dtype_local()
+```
+
+### 3.3 `argparse.ArgumentParser` 预处理
+```python
+from wttch.train.torch import ArgParser
+from torch import nn
+
+# 这一句话就可以使用 argparse.ArgumentParse 了，预处理了一些的东西。
+args = ArgParser()
+# 获取批处理...等
+batch_size = args.batch_size
+# 保存模型
+args.save_module(nn.Linear(100, 10))
+```
+```shell
+# --cuda:       使用 cuda 0 训练
+# --batch-size: 批处理 64
+# -m:           模型名称为 module1 可以调用
+# 更多 -h: 查看帮助
+python **.py --cuda 0 --batch-size 64 -m module1
 ```

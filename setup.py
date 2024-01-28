@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='wttch-train-helper',
-    version='0.0.14',
+    version='0.0.15',
     description="Wttch's Train Helper",
     author="wttch",
     packages=[
