@@ -1,5 +1,11 @@
 # wttch 的 AI 训练工具包
 
+## 使用方式
+
+```bash
+pip install wttch-train-helper
+```
+
 ## 一、消息通知
 
 ### 1.1 钉钉 webhook 通知
