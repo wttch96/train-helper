@@ -15,6 +15,7 @@ class ArgParser:
     epochs: int
     batch_size: int
     module_name: str
+    dataset_root_path: str
 
     def __init__(self):
         self.parse = ArgParser.create_parser()  # type: ArgumentParser
@@ -34,6 +35,7 @@ class ArgParser:
         self.epochs = self.args.epochs
         self.batch_size = self.args.batch_size
         self.module_name = self.args.module_name
+        self.dataset_root_path = self.args.dataset_path
 
         # 设置设备
         if self.cuda_no is not None:
@@ -69,5 +71,7 @@ class ArgParser:
                               choices=[32, 64], help="dtype 使用 float32 还是 float64")
 
         argparse.add_argument("-m", "--module-name", type=str, default="module.pkl", help="模型保存名称")
+
+        argparse.add_argument("-p", "--dataset-path", type=str, help="数据集根目录位置")
 
         return argparse
