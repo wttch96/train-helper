@@ -78,19 +78,13 @@ def module_to(module: nn.Module) -> nn.Module:
     return module.to(get_device_local())
 
 
-def tensor_to(data: torch.Tensor | tuple[torch.Tensor, torch.Tensor]) -> (
-        torch.Tensor | tuple[torch.Tensor, torch.Tensor]):
+def tensor_to(*data: torch.Tensor) -> list[torch.Tensor]:
     """
-    将数据 tensor 或者 tuple[tensor, tensor] 转换为线程保存的设备类型。
+    将数据 tensor 或者 tensor 列表 转换为线程保存的设备类型。
     Args:
         data: 要转换的数据。
 
     Returns:
         数据的转换结果。
     """
-    if isinstance(data, torch.Tensor):
-        return data.to(get_device_local())
-    if isinstance(data, tuple):
-        return data[0].to(get_device_local()), data[1].to(get_device_local())
-
-    raise TypeError(f'不支持的 type {type(data)}')
+    return [i.to(get_device_local()) for i in data]
