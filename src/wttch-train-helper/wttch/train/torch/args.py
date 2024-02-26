@@ -1,77 +1,70 @@
-from argparse import ArgumentParser
-
 import torch
-from torch import nn
 
 from .utils import try_gpu, set_device_local, set_dtype_local
 
+import json
+import sys
 
-class ArgParser:
+import yaml
+
+
+class Config:
     """
-    对 argparse.ArgumentParser 进行一些训练的预处理。
+    环境配置，使用 yml 文件。
+    例如:
+    ```
+    active: local
+      school-server:
+      local:
+        epochs: 10
+        batch-size: 64
+        dtype: float32
+        cuda_no: 1
+        dataset_path: /your/dataset/path
+    ```
+    active 必需标识启用的环境。
+    后续使用 key: 环境配置的方式可以定义多个环境。
     """
-    cuda_no: int
-    dtype: int
-    epochs: int
-    batch_size: int
-    module_name: str
-    dataset_root_path: str
 
-    def __init__(self):
-        self.parse = ArgParser.create_parser()  # type: ArgumentParser
-
-        self.args = self.parse.parse_args()
-
-        self._preprocess_arg()
-
-    def _preprocess_arg(self):
+    def __init__(self, config_file='config.yml'):
         """
-        预处理一些参数。
-
-        如果参数有设备序号、训练 dtype 会将数据写入 thread local。
+        构造函数。
+        Args:
+            config_file: 配置文件所在位置，默认 config.yml。
         """
-        self.cuda_no = self.args.cuda_no
-        self.dtype = self.args.dtype
-        self.epochs = self.args.epochs
-        self.batch_size = self.args.batch_size
-        self.module_name = self.args.module_name
-        self.dataset_root_path = self.args.dataset_path
+        with open(config_file) as f:
+            self.original = yaml.load(f, Loader=yaml.FullLoader)
+            self.active_profile = self.original['active']
+            if self.active_profile is None:
+                raise ValueError("No active profile")
+            self.args = self.original[self.active_profile]  # type: dict
+            if self.args is None:
+                print(f"Active profile[{self.active_profile}] has no arguments.", file=sys.stderr)
+                sys.stderr.flush()
+                self.args = {}
+            self.epochs = self.args.get('epochs', 10)
+            self.batch_size = self.args.get('batch-size', 64)
+            self.dtype = self.args.get('dtype', 'float32')
+            self.cuda_no = self.args.get('cuda-no')
+            self.dataset_path = self.args.get('dataset-path')
 
         # 设置设备
         if self.cuda_no is not None:
             set_device_local(try_gpu(self.cuda_no))
         # 设置 dtype
         if self.dtype is not None:
-            if self.dtype == 32:
+            if self.dtype == 'float32':
                 set_dtype_local(torch.float32)
             else:
                 set_dtype_local(torch.float64)
 
-    def save_module(self, module: nn.Module):
-        """
-        保存模型。
-        按 arg parse 解析的模型名称保存模型。
-        """
-        append = '' if self.args.module_name.endswith('.pkl') else '.pkl'
+    def __getitem__(self, item):
+        if self.args.__contains__(item):
+            return self.args[item]
+        key = item.replace("_", "-")
+        if self.args.__contains__(key):
+            return self.args[key]
+        return None
 
-        torch.save(module.state_dict(), f'{self.args.module_name}{append}')
-
-    @classmethod
-    def create_parser(cls):
-        """
-        获取训练参数。
-        """
-        argparse = ArgumentParser("设置训练参数")
-
-        argparse.add_argument("-e", "--epochs", type=int, default=36, help="训练轮次")
-        argparse.add_argument("-b", "--batch-size", type=int, default=64, help="批处理大小")
-
-        argparse.add_argument("-d", "--cuda-no", type=int, default=None, help="使用的 cuda 设备序号")
-        argparse.add_argument("-t", "--dtype", type=int, default=32,
-                              choices=[32, 64], help="dtype 使用 float32 还是 float64")
-
-        argparse.add_argument("-m", "--module-name", type=str, default="module.pkl", help="模型保存名称")
-
-        argparse.add_argument("-p", "--dataset-path", type=str, help="数据集根目录位置")
-
-        return argparse
+    def __str__(self):
+        return json.dumps(self.original)

@@ -1,10 +1,7 @@
 from torch import nn
 
-from wttch.train.torch import ArgParser
+from wttch.train.torch.args import Config
 
 if __name__ == '__main__':
-    args = ArgParser()
-
-    print(args.batch_size)
-
-    args.save_module(nn.Linear(100, 10))
+    config = Config()
+    print(config)
