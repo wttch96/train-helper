@@ -1,3 +1,3 @@
-from .args import ArgParser
+from .args import Config
 
-ArgParser = ArgParser
+Config = Config

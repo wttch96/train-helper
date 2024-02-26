@@ -165,38 +165,43 @@ set_dtype_local(torch.float32)
 dtype = get_dtype_local()
 ```
 
-### 3.3 `argparse.ArgumentParser` 预处理
-```python
-from wttch.train.torch import ArgParser
-from torch import nn
+### 3.3 yml 多环境配置
 
-# 这一句话就可以使用 argparse.ArgumentParse 了，预处理了一些的东西。
-args = ArgParser()
-# 获取批处理...等
-batch_size = args.batch_size
-# 保存模型
-args.save_module(nn.Linear(100, 10))
+环境配置，使用 yml 文件。
+
+#### 首先书写你的 yml 文件
+
+例如:
+
 ```
-具体使用方式：
-```shell
-# --cuda:       使用 cuda 0 训练
-# --batch-size: 批处理 64
-# -m:           模型名称为 module1 可以调用
-# 更多 -h: 查看帮助
-python **.py --cuda 0 --batch-size 64 -m module1
+active: local
+  school-server:
+  local:
+    epochs: 10
+    batch-size: 64
+    dtype: float32
+    cuda_no: 1
+    dataset_path: /your/dataset/path
+    your-property-key: your-property
+```
 
-# usage: 设置训练参数 [-h] [-e EPOCHS] [-b BATCH_SIZE] [-d CUDA_NO] [-t {32,64}] [-m MODULE_NAME]
-# 
-# options:
-#   -h, --help            show this help message and exit
-#   -e EPOCHS, --epochs EPOCHS
-#                         训练轮次
-#   -b BATCH_SIZE, --batch-size BATCH_SIZE
-#                         批处理大小
-#   -d CUDA_NO, --cuda-no CUDA_NO
-#                         使用的 cuda 设备序号
-#   -t {32,64}, --dtype {32,64}
-#                         dtype 使用 float32 还是 float64
-#   -m MODULE_NAME, --module-name MODULE_NAME
-#                         模型保存名称
+active 必需标识启用的环境。
+后续使用
+key: 环境配置
+的方式可以定义多个环境。
+
+#### 获取你启用的环境的变量
+
+```python
+# 获取你的配置
+from wttch.train.torch import Config
+
+# 定义配置
+config = Config()
+
+# 获取预定义的属性
+print(config.epochs)
+
+# 获取其他你自己的属性
+print(config['you-property-key'])
 ```
