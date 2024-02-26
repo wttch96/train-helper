@@ -173,16 +173,16 @@ dtype = get_dtype_local()
 
 例如:
 
-```
+```yaml
 active: local
-  school-server:
-  local:
-    epochs: 10
-    batch-size: 64
-    dtype: float32
-    cuda_no: 1
-    dataset_path: /your/dataset/path
-    your-property-key: your-property
+school-server:
+local:
+  epochs: 10
+  batch-size: 64
+  dtype: float32
+  cuda_no: 1
+  dataset_path: /your/dataset/path
+  your-property-key: your-property
 ```
 
 active 必需标识启用的环境。
