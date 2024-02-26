@@ -3,6 +3,8 @@ import threading
 
 import torch
 
+from torch import nn
+
 # 线程保存的 device
 _device_local = threading.local()
 
@@ -62,3 +64,27 @@ def get_dtype_local():
         set_dtype_local(dtype)
         print(f'线程变量 dtype 为空，已设置为 {dtype}.')
     return dtype
+
+
+def module_to(module: nn.Module) -> nn.Module:
+    """
+    将模型转换为线程的设备类型
+    Args:
+        module: 要转换的模型
+
+    Returns:
+        模型本身
+    """
+    return module.to(get_device_local())
+
+
+def tensor_to(*data: torch.Tensor) -> list[torch.Tensor]:
+    """
+    将数据 tensor 或者 tensor 列表 转换为线程保存的设备类型。
+    Args:
+        data: 要转换的数据。
+
+    Returns:
+        数据的转换结果。
+    """
+    return [i.to(get_device_local()) for i in data]
