@@ -3,9 +3,9 @@ from time import sleep
 
 import torch
 
-from wttch.train.utils import StopWatch
-from wttch.train.utils import cache_wrapper
-from wttch.train.torch.utils import get_device_local, set_device_local, try_gpu, set_dtype_local, get_dtype_local
+from wth.utils import StopWatch
+from wth.utils import cache_wrapper
+from wth.torch.utils import get_device_local, set_device_local, try_gpu, set_dtype_local, get_dtype_local
 
 
 def set_device(device):
