@@ -1,7 +1,7 @@
 import unittest
 import time
 
-from wttch.train.utils.progress import Progress
+from wth.utils.progress import Progress
 from torch.utils.data import Dataset, DataLoader
 
 

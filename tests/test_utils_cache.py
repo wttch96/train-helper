@@ -1,4 +1,4 @@
-from wttch.train.utils import cache_wrapper
+from wth.utils import cache_wrapper
 
 
 @cache_wrapper(prefix="test_utils_cache")

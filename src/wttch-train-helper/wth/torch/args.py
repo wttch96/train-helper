@@ -37,6 +37,10 @@ class Config:
             self.active_profile = self.original['active']
             if self.active_profile is None:
                 raise ValueError("No active profile")
+
+            print(f"Active profile[{self.active_profile}].")
+            sys.stdout.flush()
+
             self.args = self.original[self.active_profile]  # type: dict
             if self.args is None:
                 print(f"Active profile[{self.active_profile}] has no arguments.", file=sys.stderr)

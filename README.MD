@@ -7,7 +7,7 @@
 [钉钉 webhook 机器人API](https://open.dingtalk.com/document/orgapp/robot-message-types-and-data-format#title-z74-8to-i7e)
 
 ```python
-from wttch.train.notification import DingtalkNotification
+from wth.notification import DingtalkNotification
 
 # 钉钉机器人 webhook 的链接
 webhook_url = ''
@@ -27,7 +27,7 @@ notification.send_markdown('')
 [企业微信机器人API](https://developer.work.weixin.qq.com/document/path/91770)
 
 ```python
-from wttch.train.notification import WechatNotification
+from wth.notification import WechatNotification
 
 # 企业微信机器人 webhook 的链接
 webhook_url = ''
@@ -49,7 +49,7 @@ notification.send_markdown('')
 > (2). 正常调用你的函数。
 
 ```python
-from wttch.train.utils import cache_wrapper
+from wth.utils import cache_wrapper
 
 # 缓存的文件名字前缀，函数的参数会被添加到该名字后面
 prefix = 'dataset'
@@ -68,7 +68,7 @@ you_load_dataset_function()
 ### 2.2 计时器
 
 ```python
-from wttch.train.utils import StopWatch
+from wth.utils import StopWatch
 
 stopwatch = StopWatch()
 stopwatch.start("job 1")
@@ -91,7 +91,7 @@ stopwatch.display()
 ### 2.3.1 循环模式
 
 ```python
-from wttch.train.utils.progress import Progress
+from wth.utils.progress import Progress
 
 with Progress(total=1000) as progress:
     for i in range(1000):
@@ -104,7 +104,7 @@ with Progress(total=1000) as progress:
 ### 2.3.2 迭代器模式
 
 ```python
-from wttch.train.utils.progress import Progress
+from wth.utils.progress import Progress
 
 dataset = [1, 2, 3]
 
@@ -128,7 +128,7 @@ for data in progress:
 可以添加 `device_no` 参数，但是只对 cuda 有效，表示 cuda 的序号。
 
 ```python
-from wttch.train.torch.utils import try_gpu
+from wth.torch.utils import try_gpu
 
 try_gpu(device_no=2)
 ```
@@ -139,7 +139,7 @@ try_gpu(device_no=2)
 2. 需要训练设备的地方, 从 thread local 中获取设备数据;
 
 ```python
-from wttch.train.torch.utils import try_gpu, get_device_local, set_device_local
+from wth.torch.utils import try_gpu, get_device_local, set_device_local
 
 # 尝试获取 gpu 并写入 thread local
 set_device_local(try_gpu(device_no=0))
@@ -156,7 +156,7 @@ device = get_device_local()
 
 ```python
 import torch
-from wttch.train.torch.utils import get_dtype_local, set_dtype_local
+from wth.torch.utils import get_dtype_local, set_dtype_local
 
 # 将训练的 dtype 数据类型写入 thread local
 set_dtype_local(torch.float32)
@@ -174,15 +174,24 @@ dtype = get_dtype_local()
 例如:
 
 ```yaml
+# 激活的环境
 active: local
-school-server:
+
+# 本地环境
 local:
   epochs: 10
-  batch-size: 64
+  batch-size: 256
+  dataset-path: /Volumes/Wttch/datasets/torchvision/cache
   dtype: float32
-  cuda_no: 1
-  dataset_path: /your/dataset/path
-  your-property-key: your-property
+  cuda-no: 1
+  # 你的其他属性
+
+
+# 学校环境
+school-server:
+  epochs: 10
+  batch-size: 256
+  dataset-path:
 ```
 
 active 必需标识启用的环境。
@@ -194,7 +203,7 @@ key: 环境配置
 
 ```python
 # 获取你的配置
-from wttch.train.torch import Config
+from wth.torch import Config
 
 # 定义配置
 config = Config()
@@ -204,4 +213,21 @@ print(config.epochs)
 
 # 获取其他你自己的属性
 print(config['you-property-key'])
+```
+
+### 3.4 TrainAndTestDataLoader 测试和训练集
+
+```python
+from wth.torch.utils.data import TrainAndTestDataLoader
+from torch.utils.data import Dataset, DataLoader
+
+# 数据集声明, 需要是 Dataset 的子类
+dataset = ...  # type: Dataset
+
+# train_rate 训练用集合的百分比
+loader = TrainAndTestDataLoader(dataset, train_rate=0.8)
+
+# 训练用 DataLoader
+loader1 = loader.train_loader  # type: DataLoader
+loader2 = loader.test_loader  # type: DataLoader
 ```
