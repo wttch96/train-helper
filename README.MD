@@ -117,6 +117,18 @@ for data in progress:
     progress.train_result(loss=0.01, acc=0.02)
 ```
 
+## 2.4 快捷获取函数执行时间
+```python
+from wth.utils import get_time
+from time import sleep
+
+@get_time
+def test():
+    sleep(1)
+```
+执行结果:
+>"test()" took 1.0051 seconds to execute.
+
 ## 三、torch 工具包
 
 ### 3.1 训练设备获取
