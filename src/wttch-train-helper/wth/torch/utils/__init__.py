@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 import threading
 
 import torch
@@ -78,7 +78,7 @@ def module_to(module: nn.Module) -> nn.Module:
     return module.to(get_device_local())
 
 
-def tensor_to(*data: torch.Tensor) -> list[torch.Tensor]:
+def tensor_to(*data: torch.Tensor) -> Union[list[torch.Tensor], torch.Tensor]:
     """
     将数据 tensor 或者 tensor 列表 转换为线程保存的设备类型。
     Args:
@@ -87,4 +87,7 @@ def tensor_to(*data: torch.Tensor) -> list[torch.Tensor]:
     Returns:
         数据的转换结果。
     """
-    return [i.to(get_device_local()) for i in data]
+    ret = [i.to(get_device_local()) for i in data]
+    if len(ret) == 1:
+        return ret[0]
+    return ret
