@@ -1,7 +1,3 @@
-import torch
-
-from .utils import try_gpu, set_device_local, set_dtype_local
-
 import json
 import sys
 
@@ -16,11 +12,6 @@ class Config:
     active: local
       school-server:
       local:
-        epochs: 10
-        batch-size: 64
-        dtype: float32
-        cuda_no: 1
-        dataset_path: /your/dataset/path
     ```
     active 必需标识启用的环境。
     后续使用 key: 环境配置的方式可以定义多个环境。
@@ -41,33 +32,18 @@ class Config:
             print(f"Active profile[{self.active_profile}].")
             sys.stdout.flush()
 
-            self.args = self.original[self.active_profile]  # type: dict
-            if self.args is None:
+            self.configs = self.original[self.active_profile]  # type: dict
+            if self.configs is None:
                 print(f"Active profile[{self.active_profile}] has no arguments.", file=sys.stderr)
                 sys.stderr.flush()
-                self.args = {}
-            self.epochs = self.args.get('epochs', 10)
-            self.batch_size = self.args.get('batch-size', 64)
-            self.dtype = self.args.get('dtype', 'float32')
-            self.cuda_no = self.args.get('cuda-no')
-            self.dataset_path = self.args.get('dataset-path')
-
-        # 设置设备
-        if self.cuda_no is not None:
-            set_device_local(try_gpu(self.cuda_no))
-        # 设置 dtype
-        if self.dtype is not None:
-            if self.dtype == 'float32':
-                set_dtype_local(torch.float32)
-            else:
-                set_dtype_local(torch.float64)
+                self.configs = {}
 
     def __getitem__(self, item):
-        if self.args.__contains__(item):
-            return self.args[item]
+        if self.configs.__contains__(item):
+            return self.configs[item]
         key = item.replace("_", "-")
-        if self.args.__contains__(key):
-            return self.args[key]
+        if self.configs.__contains__(key):
+            return self.configs[key]
         return None
 
     def __str__(self):
