@@ -48,12 +48,7 @@ class Config:
 
             # 添加共用部分, 如果存在一样的 key, 则使用 active 激活的配置内的
             if shared_key in self.original:
-                for k, v in self.original[shared_key].items():
-                    # 如果 激活的配置中没有 shared 内的定义, 则添加
-                    if k not in self.configs:
-                        self.configs[k] = v
-                    else:
-                        print(f'key[{k}] both in (shared, {self.active_profile}), use ({self.active_profile})')
+                self.configs = self._merge_dicts(self.original[shared_key], self.configs)
 
     def __getitem__(self, item):
         if self.configs.__contains__(item):
@@ -65,3 +60,32 @@ class Config:
 
     def __str__(self):
         return json.dumps(self.original)
+
+    def _merge_dicts(self, dict1: dict, dict2: dict, keys=None):
+        """
+        递归合并两个字典, 保证 dict1, dict2 字段合并, 如果同时存在则保留 dict2 的。
+        Args:
+            dict1 (dict): 合并的第一个词典.
+            dict2 (dict): 合并的第二个词典, 里面的值会覆盖 dict1 的值。
+        Returns:
+            dict: 合并后的字典.
+        """
+        if keys is None:
+            keys = []
+        merged = dict1.copy()
+
+        for key, value in dict2.items():
+            if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+                # 合并子级
+                keys.append(key)
+                merged[key] = self._merge_dicts(merged[key], value, keys)
+                keys.remove(key)
+            else:
+                old_value = merged[key] if key in merged else None
+                merged[key] = value
+                if old_value is not None:
+                    keys.append(key)
+                    print(f"键 '{':'.join(keys)}' 存在于 [shared] 和 [{self.active_profile}] 中, "
+                          f"值变换 {old_value} --> {value}, 只保留 {value}")
+
+        return merged

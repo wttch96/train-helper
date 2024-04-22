@@ -1,9 +1,17 @@
 active: local
 
-local:
+shared:
   epochs: 10
-  batch-size: 64
   dtype: float32
+  parameter:
+    batch-size: 64
+
+
+local:
+  epochs: 100
+  parameter:
+    batch-size: 128
+  batch-size: 64
   cuda_no: 1
   dataset_path: /your/dataset/path
 school-server:
