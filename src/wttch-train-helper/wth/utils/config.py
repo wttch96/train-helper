@@ -75,17 +75,16 @@ class Config:
         merged = dict1.copy()
 
         for key, value in dict2.items():
+            keys.append(key)
             if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
                 # 合并子级
-                keys.append(key)
                 merged[key] = self._merge_dicts(merged[key], value, keys)
-                keys.remove(key)
             else:
                 old_value = merged[key] if key in merged else None
                 merged[key] = value
                 if old_value is not None:
-                    keys.append(key)
                     print(f"键 '{':'.join(keys)}' 存在于 [shared] 和 [{self.active_profile}] 中, "
                           f"值变换 {old_value} --> {value}, 只保留 {value}")
+            keys.remove(key)
 
         return merged

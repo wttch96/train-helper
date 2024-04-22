@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wttch-train-helper"
-version = "0.0.27"
+version = "0.0.28"
 authors = [
     { name = "Wttch", email = "wttch@wttch.com" },
 ]
