@@ -1,10 +1,8 @@
 from torch.utils.data import Dataset, random_split, DataLoader
 
-from wth.torch import Config
-
 
 class TrainAndTestDataLoader:
-    def __init__(self, dataset: Dataset, train_rate: float = 0.9, config: Config = None):
+    def __init__(self, dataset: Dataset, train_rate: float = 0.9, config=None):
         self.dataset = dataset
         if train_rate < 0 or train_rate > 1:
             raise ValueError(f"train_rate should be between 0 and 1, got {train_rate}")

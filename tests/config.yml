@@ -1,17 +1,20 @@
-active: local
-
-shared:
-  epochs: 10
-  dtype: float32
-  parameter:
-    batch-size: 64
+config:
+  active: dev
 
 
-local:
-  epochs: 100
-  parameter:
-    batch-size: 128
-  batch-size: 64
-  cuda_no: 1
-  dataset_path: /your/dataset/path
-school-server:
+---
+config:
+  name: shared
+  shared: true
+
+---
+config:
+  name: dev
+  test:
+    a: true
+    b: 1
+    c: test
+
+---
+config:
+  name: local
